@@ -4,52 +4,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/styles/global.css" />
   <title>Cadastro de Usuário</title>
 </head>
 
-<body>
-  <section>
-    <h1>Criar nova conta</h1>
-    <form method="post" action="">
-      <div>
-        <label>Nome Completo:</label>
-        <input type="text" name="nome_completo" id="nome_completo" />
-      </div>
-
-      <fieldset>
-        <legend>tipo de conta</legend>
-        <div>
-          <input type="radio" name="tipo_conta" value="pessoa" />
-          <label for="tipo_conta">Pessoa</label>
+<body class="flex">
+  <section class="flex drawn width-100 height-100 justify-content-center middle flex-column">
+    <div class="flex flex-column drawn m-default p-default" style="max-height: 700px; max-width: 500px;">
+      <h1 class="flex drawn m-default p-default">Criar nova conta</h1>
+      <form class="flex drawn m-default p-default flex-column" style="height: 500px; width: 300px;" method="post" action="">
+        <div class="flex drawn space-default-input flex-column">
+          <label>Nome Completo:</label>
+          <input type="text" name="nome_completo" id="nome_completo" />
         </div>
 
-        <div>
-          <input type="radio" name="tipo_conta" value="lojista" />
-          <label for="tipo_conta">Lojista</label>
+        <fieldset class="flex drawn space-default-input flex-column">
+          <legend>tipo de conta</legend>
+          <div>
+            <input type="radio" name="tipo_conta" value="pessoa" />
+            <label for="tipo_conta">Pessoa</label>
+          </div>
+
+          <div>
+            <input type="radio" name="tipo_conta" value="lojista" />
+            <label for="tipo_conta">Lojista</label>
+          </div>
+
+        </fieldset>
+
+        <div class="flex drawn space-default-input flex-column">
+          <label>CPF/CNPJ: </label>
+          <input type="text" name="cpf_cnpj" id="cpf_cnpj" />
         </div>
 
-      </fieldset>
+        <div class="flex drawn space-default-input flex-column">
+          <label>e-mail:</label>
+          <input type="email" name="email" id="email" />
+        </div>
 
-      <div>
-        <label>CPF/CNPJ: </label>
-        <input type="text" name="cpf_cnpj" id="cpf_cnpj" />
-      </div>
+        <div class="flex drawn space-default-input flex-column">
+          <label for="senha">senha: </label>
+          <input type="password" name="senha" id="senha">
+        </div>
 
-      <div>
-        <label>e-mail:</label>
-        <input type="email" name="email" id="email" />
-      </div>
-
-      <div>
-        <label for="senha">senha: </label>
-        <input type="password" name="senha" id="senha">
-      </div>
-
-      <div>
-        <button type="submit">Cadastrar</button>
-        <a href="../../index.php"><button type="button">Voltar</button></a>
-      </div>
-    </form>
+        <div class="flex drawn space-default-input gap">
+          <button type="submit">Cadastrar</button>
+          <a href="../../index.php"><button type="button">Voltar</button></a>
+        </div>
+      </form>
+    </div>
   </section>
 </body>
 
@@ -58,7 +61,7 @@
 <?php
 
 require_once '../database.php';
-#validar os dados
+# validar os dados
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $nome_completo = trim($_POST['nome_completo']);
@@ -73,22 +76,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $erros[] = "O nome completo é obrigatório.";
   }
 
-  if (!in_array($tipo_conta, ['pessoa', 'lojista'])) {
-    $erros[] = "Tipo de conta inválido.";
-  }
-
-  #Verificar se o CPF ou CNPJ é único
   if (!preg_match("/^[0-9]{11,14}$/", $cpf_cnpj)) {
     $erros[] = "CPF/CNPJ inválido.";
   }
 
-  #Verificar se o email é único
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $erros[] = "E-mail inválido.";
-  }
-
-  if (strlen($senha) < 6) {
-    $erros[] = "A senha deve ter pelo menos 6 caracteres.";
   }
 
   if (!empty($erros)) {
@@ -115,12 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($email_check->num_rows > 0) {
         echo "<p style='color: red;'>Email já cadastrado</p>";
       } else {
-        // Inserir os dados no banco de dados
         $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
+        $creditos = 10;
 
-        $sql = "INSERT INTO usuarios (nome, tipo_conta, cpf_cnpj, email, senha) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO usuarios (nome, tipo_conta, cpf_cnpj, email, senha, creditos) VALUES (?, ?, ?, ?, ?, ?)";
         $sendInfo = $conn->prepare($sql);
-        $sendInfo->bind_param("sssss", $nome_completo, $tipo_conta, $cpf_cnpj, $email, $hashed_senha);
+        $sendInfo->bind_param("ssssss", $nome_completo, $tipo_conta, $cpf_cnpj, $email, $hashed_senha, $creditos);
 
         if ($sendInfo->execute()) {
           echo "<p style='color: green;'>Cadastro realizado com sucesso!</p>";
@@ -131,5 +124,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   }
 }
-
-#Enviar ao banco de dados

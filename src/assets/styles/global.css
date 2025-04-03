@@ -1,0 +1,72 @@
+* {}
+
+body {}
+
+section {}
+
+.flex {
+  display: flex;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.view-100 {
+  width: 100vw;
+}
+
+.height-100 {
+  height: 90vh;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.middle {
+  align-items: center;
+  align-content: center;
+}
+
+.drawn {
+  border-width: 1px;
+  border-style: dashed;
+  border-color: black;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.p-default {
+  padding: 10px;
+}
+
+.m-default {
+  margin: 10px;
+}
+
+.p-30 {
+  padding: 30px;
+}
+
+.m-30 {
+  margin: 30px;
+}
+
+.space-default-input {
+  margin-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.box-default {
+  margin-top: 30px;
+  align-items: center;
+  align-content: center;
+}
+
+.gap {
+  gap: 2px;
+}
